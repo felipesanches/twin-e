@@ -133,6 +133,6 @@ int32 getDistance3D(int32 x1, int32 y1, int32 z1, int32 x2, int32 y2, int32 z2);
 	@param movePtr Pointer to process movements */
 void moveActor(int32 angleFrom, int32 angleTo, int32 speed, ActorMoveStruct *movePtr);
 
-void processActorMovements(int32 actorIdx);
+void processActorMovements(int16 key, int32 actorIdx);
 
 #endif

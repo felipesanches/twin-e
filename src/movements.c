@@ -27,15 +27,38 @@
 #include <math.h>
 
 #include "movements.h"
-#include "actor.h"
-#include "lbaengine.h"
-#include "renderer.h"
-#include "grid.h"
 #include "scene.h"
-#include "keyboard.h"
-#include "animations.h"
-#include "collision.h"
 #include "gamestate.h"
+
+//#include "animations.h"
+#include "animationtypes.h"
+extern int32 initAnim(int32 newAnim, int16 animType, uint8 animExtra, int32 actorIdx);
+
+//#include "lbaengine.h"
+extern volatile int32 lbaTime;
+extern int32 loopPressedKey;
+extern int32 previousLoopPressedKey;
+
+//#include "renderer.h"
+extern int16 *shadeAngleTab3;
+extern int16 destX;
+extern int16 destZ;
+
+//#include "grid.h"
+extern uint8 *blockBuffer;
+uint8* getBlockLibrary(int32 index);
+
+//#include "keyboard.h"
+extern int16 skipIntro;
+extern int32 heroPressedKey;
+extern int32 heroPressedKey2;
+
+//#include "collision.h"
+extern int32 collisionX;
+extern int32 collisionY;
+extern int32 collisionZ;
+void reajustActorPosition(int32 brickShape);
+
 
 /** Get shadow position
 	@param X Shadow X coordinate
@@ -306,7 +329,7 @@ void moveActor(int32 angleFrom, int32 angleTo, int32 speed, ActorMoveStruct *mov
 	movePtr->timeOfChange = lbaTime;
 }
 
-void processActorMovements(int32 actorIdx) {
+void processActorMovements(int16 key, int32 actorIdx) {
 	ActorStruct *actor = &sceneActors[actorIdx];
 
 	if (actor->entity == -1)

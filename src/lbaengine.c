@@ -359,7 +359,7 @@ int32 runGameEngine() { // mainLoopInteration
 				}
 			}
 
-			processActorMovements(a);
+			processActorMovements(key, a);
 
 			actor->collisionX = actor->X;
 			actor->collisionY = actor->Y;
