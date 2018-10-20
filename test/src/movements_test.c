@@ -53,21 +53,49 @@ void reajustActorPosition(int32 brickShape){
 
 int32 original_getAngleAndSetTargetActorDistance(int32 x1, int32 z1, int32 x2, int32 z2);
 
+/*
 TEST(MovementsTest,getAngleAndSetTargetActorDistance){
-  int32 x1, z1, x2, z2;
+  int32 x1=100, z1=100, x2, z2;
+  int32 expected, actual;
+  int step = 3;
 
-  for (x1=0; x1<100; x1++){
-    for (z1=0; z1<100; z1++){
-      for (x2=0; x2<100; x2++){
-        for (z2=0; z2<100; z2++){
-          EXPECT_EQ(
-            original_getAngleAndSetTargetActorDistance(x1, z1, x2, z2),
-                     getAngleAndSetTargetActorDistance(x1, z1, x2, z2)
-          );
-        }
-      }
+  fprintf(stderr, "data = [\n");
+  for (x2=0; x2<200; x2+=step){
+    for (z2=0; z2<200; z2+=step){
+      expected = original_getAngleAndSetTargetActorDistance(x1, z1, x2, z2);
+      actual = getAngleAndSetTargetActorDistance(x1, z1, x2, z2);
+      fprintf(stderr, "  [%d, %d, %d, %d, %d, %d],\n", x1, z1, x2, z2, expected, actual);
+      EXPECT_EQ(expected, actual);
     }
   }
+  fprintf(stderr, "]\n");
+}
+*/
+#define PI 3.141592
+TEST(MovementsTest,getAngleAndSetTargetActorDistance){
+  int32 x1=100, z1=100, x2, z2;
+  int32 expected, actual;
+
+  float L = 3;
+  float angle=0, radius=10;
+  float angle_step = L/radius; // = 2*PI/(2*PI*radius/L);
+  int radius_step = L;
+  int num_loops = 100/radius_step;
+
+  fprintf(stderr, "data = [\n");
+  for (angle=0; angle<2*PI*num_loops; angle+=angle_step){
+    radius = radius_step * (angle/2*PI + 1); //update
+    angle_step = L/radius; //update
+    x2 = (int) floor(x1 + radius * cos(angle));
+    z2 = (int) floor(z1 + radius * sin(angle));
+    expected = original_getAngleAndSetTargetActorDistance(x1, z1, x2, z2);
+    actual = getAngleAndSetTargetActorDistance(x1, z1, x2, z2);
+    if (abs(actual-expected)<1000){
+      fprintf(stderr, "  [%d, %d, %d, %d, %d, %d, %d],\n", x1, z1, x2, z2, actual-expected, actual, expected);
+      EXPECT_EQ(expected, actual);
+    }
+  }
+  fprintf(stderr, "]\n");
 }
 
 int main(int argc, char **argv) {
